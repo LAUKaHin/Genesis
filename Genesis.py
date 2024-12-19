@@ -20,7 +20,7 @@ class Genesis:
         self.systemContents=[]
         self.userContents=[]
         
-    
+    #---Helper Functions---#
     #Import image and convert it to base64 string (If image is stored in local)
     def ImgToBase64(self, filename):
         fileType=""
@@ -40,7 +40,7 @@ class Genesis:
     
     #Import file and convert it to string (If filee is stored in local)
     def FileToMD(self, filename):
-        return MarkItDown().convert(filename)
+        return str(MarkItDown().convert(filename).text_content)
     
     #Create new dictionary for content
     def CreateDict(self, dicttype, value):
@@ -51,8 +51,33 @@ class Genesis:
                     dicttype: value
                }
     
+    #---Public Functions---#
+    #Push system message (Add new message in contents of system)
+    def PushMsgToSystem(self, dicttype, value):
+        self.systemContents.append(self.CreateDict(dicttype, value))
+        
+    #Push system attachment (Add new attachment in contents of system)
+    def PushFileToSystem(self, value):
+        self.systemContents.append(self.CreateDict("text", self.FileToMD(value)))
+        
+    #Pop the last message of the content in system
+    def PopMsgOfSystem(self):
+        self.userContents.pop()
+        
+    #Push user message (Add new message in contents of user)
+    def PushMsgToUser(self, dicttype, value):
+        self.userContents.append(self.CreateDict(dicttype, value))
+        
+    #Push user attachment (Add new attachment in contents of system)
+    def PushFileToUser(self, value):
+        self.UserContents.append(self.CreateDict("text", self.FileToMD(value)))
+        
+    #Pop the last message of the content in user
+    def PopMsgOfUser(self):
+        self.userContents.pop()
+    
     #Send msg to AI
-    def SendAndReceive(self, LLM=""):
+    def TXRX(self, LLM=""):
         response = requests.post(
           url="https://openrouter.ai/api/v1/chat/completions",
           headers={
@@ -87,14 +112,17 @@ class Genesis:
 #Example of how to run this program
 def main():
     #Define the key and project title
-    print("Running G Main")
-    key="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"
+    key="YourKey"
     httpRef=""
     projectTitle="DressUp"
     stylist=Genesis(key, httpRef, projectTitle)#Create object
-    stylist.systemContents.append(stylist.CreateDict("text", "You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file."))
-    stylist.userContents.append(stylist.CreateDict("text", "Hello! who are you?"))
+    stylist.PushMsgToSystem("text", "You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file.")
+    stylist.PushFileToSystem("GU_Cloths.docx")
+    stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommended to me? Here is my selfee.")
+    stylist.PushMsgToUser("image_url", "1.jpg")
     print(stylist)#Show the status of the object
-    print(stylist.SendAndReceive("openai/gpt-4o-mini"))#Send the request and receive it
-    del stylist.userContents#Remember to delete everytime after receive the msg.
+    print(stylist.TXRX("openai/gpt-4o-mini"))#Send the request and receive it
     del stylist# Delete the object
+    
+if __name__ == "__main__":
+    main()
