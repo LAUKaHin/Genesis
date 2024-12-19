@@ -62,7 +62,7 @@ class Genesis:
         
     #Pop the last message of the content in system
     def PopMsgOfSystem(self):
-        self.userContents.pop()
+        self.systemContents.pop()
         
     #Push user message (Add new message in contents of user)
     def PushMsgToUser(self, dicttype, value):
