@@ -1,7 +1,7 @@
 # Genesis
 Genesis.py, a broker between OpenRouter and end users/devices based on OpenRouter and request library. Because OpenAI has forbiding Hong Kong from using ChatGPT, I have created this class for another approuch.
 
-This 
+Python Version: 3.10
 
 ## Genesis.py
 This class can help to transmit text, image and markdown to OpenRouter. Due to the limitation on OpenRouter and MarkItDown, it is not possible to transmit other file directly. here are the functions:
