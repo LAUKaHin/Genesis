@@ -47,3 +47,10 @@ Cannot send reqest data with "UTF-8" encode. Don't send text other than English.
 Please ensure you input file do not have these contents.
 1. Cannot convert image of folder to base64 string or either bytearray.
 2. Cannot convert Math symbol or LaTex to normal text.
+
+## Template / Example
+Here provided two examples to showcase how to use Genesis.py
+1. DescriptionProvider.py
+   Show how to input filename in CMD and upload image to the GenAI to finish the task
+2. Server.py
+   Demonstrate how to handle get and post request and responsethem
