@@ -4,7 +4,7 @@ Genesis.py, a broker between OpenRouter and end users/devices based on OpenRoute
 Python Version: 3.10
 
 ## Genesis.py
-This class can help to transmit text, image and markdown to OpenRouter. Due to the limitation on OpenRouter and MarkItDown, it is not possible to transmit other file directly. here are the functions:
+This class can help to transmit text, image and markdown to OpenRouter. Here are the functions:
 
 ### __init__(self, key, httpRef, projTitle)
 It is a constructor, you need to set the key in order to use GenAI service from OpenRouter. Set the name of project title is recommended but not necessary. httpRef is not not necessary.
@@ -23,3 +23,17 @@ Main function of Genesis.py, the LLM is for AI/LLM model selection
 
 ### __str__(self)
 Show the info for the class
+
+## Limitation
+This python class is depends on OpenRouter, request and MarkItDown. Due to the their limitation, there are constraints:
+
+### OpenRouter
+It cannot transmit file to GenAI directly, need to be converted to markdown first. Library namely MarkItDown will be used.
+
+### request
+Cannot send reqest data with "UTF-8" encode. Don't send text other than English.
+
+### MarkItDown
+1. Cannot convert image of folder to base64 string or either bytearray.
+2. Cannot convert Math symbol or LaTex to normal text.
+Please ensure you input file do not have this input. 
