@@ -1,7 +1,7 @@
 # Genesis
 Genesis.py, a broker between OpenRouter and end users/devices based on OpenRouter and request library. Because OpenAI has forbiding Hong Kong from using ChatGPT, I have created this class for another approuch.
 
-Current Version: 0.0.3
+Current Version: 0.0.3\
 Support Python Version: 3.10
 
 ## Genesis.py
@@ -50,7 +50,7 @@ Please ensure you input file do not have these contents.
 
 ## Template / Example
 Here provided two examples to showcase how to use Genesis.py
-1. DescriptionProvider.py
+1. DescriptionProvider.py\
    Show how to input filename in CMD and upload image to the GenAI to finish the task
-2. Server.py
+2. Server.py\
    Demonstrate how to handle get and post request and responsethem
