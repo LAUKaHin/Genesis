@@ -49,7 +49,7 @@ Please ensure you input file do not have these contents.
 2. Cannot convert Math symbol or LaTex to normal text.
 
 ## Template / Example
-Here provided two examples to showcase how to use Genesis.py
+In main() of Genesis has shown the example of usage. Here provided two templates to showcase how to use Genesis.py
 1. DescriptionProvider.py\
    Show how to input filename in CMD and upload image to the GenAI to finish the task
 2. Server.py\
