@@ -4,22 +4,31 @@ Genesis.py, a broker between OpenRouter and end users/devices based on OpenRoute
 Python Version: 3.10
 
 ## Genesis.py
-This class can help to transmit text, image and markdown to OpenRouter. Here are the functions:
+This class can help to transmit text, image and markdown to OpenRouter. Here are the PUBLIC functions:
 
 ### __init__(self, key, httpRef, projTitle)
 It is a constructor, you need to set the key in order to use GenAI service from OpenRouter. Set the name of project title is recommended but not necessary. httpRef is not not necessary.
 
-### ImgToBase64(self, filename)
-It import image and convert it and return a base64 string. It for the image that stored in local (because of formatting of json for OpenRouter)
+### TXRX(self, LLM="")
+Main function of Genesis.py, the LLM is for AI/LLM model selection. It can transmit the data and receive it. This function will return string when there is no error. Otherwise, error code (str) will be returned
 
-### FileToMD(self, filename)
-It convert the file to markdown format (This function is rely on MarkItDown and it is buggy as it is a new library)
+### PushMsgToSystem(self, value)
+Push string into contents of system. Note that it cannot stored non ascii string in it.
 
-### CreateDict(self, dicttype, value)
-It will create new dictionary for every message. You can only either "text" or "image_url" as dicttype.
+### PushFileToSystem(self, value)
+Push file into contents of system. Note that the file cannot contain non ascii string, special math symbols and images.
 
-### SendAndReceive(self, LLM="")
-Main function of Genesis.py, the LLM is for AI/LLM model selection
+### PopMsgOfSystem(self)
+Pop the last message of the content in system
+
+### PushMsgToUser(self, dicttype, value)
+Push string into contents of user. Note that it cannot stored non ascii string in it.
+
+### PushFileToUser(self, value)
+Push file into contents of user. Note that the file cannot contain non ascii string, special math symbols and images.
+
+### PopMsgOfUser(self)
+Pop the last message of the content in user
 
 ### __str__(self)
 Show the info for the class
@@ -34,6 +43,6 @@ It cannot transmit file to GenAI directly, need to be converted to markdown firs
 Cannot send reqest data with "UTF-8" encode. Don't send text other than English.
 
 ### MarkItDown
+Please ensure you input file do not have these contents.
 1. Cannot convert image of folder to base64 string or either bytearray.
 2. Cannot convert Math symbol or LaTex to normal text.
-Please ensure you input file do not have this input. 
