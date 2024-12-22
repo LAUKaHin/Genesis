@@ -34,7 +34,7 @@ class Genesis:
             print("Error: file type not supported")
             return None
         image=open(filename, 'rb')
-        encoded="data:image/"+fileType+";base64,"+base64.b64encode(image.read()).decode('ascii')
+        encoded="data:image/"+fileType+";base64,"+base64.b64encode(image.read()).decode('utf-8')
         image.close()
         return encoded
     
@@ -53,8 +53,8 @@ class Genesis:
     
     #---Public Functions---#
     #Push system message (Add new message in contents of system)
-    def PushMsgToSystem(self, dicttype, value):
-        self.systemContents.append(self.CreateDict(dicttype, value))
+    def PushMsgToSystem(self, value):
+        self.systemContents.append(self.CreateDict("text", value))
         
     #Push system attachment (Add new attachment in contents of system)
     def PushFileToSystem(self, value):
@@ -100,9 +100,10 @@ class Genesis:
             ]
           })
         )
-        return json.loads(response.text)["choices"][0]["message"]["content"]
-        #return json.loads(response.text)["choices"]["message"]["content"]
-        #return json.dumps(json.loads(response.text), indent=4)#Readable Format
+        if(response.status_code!=200):
+            return str(response.status_code)
+        else:
+            return json.loads(response.text)["choices"][0]["message"]["content"]
     
     #Show the info for the class
     def __str__(self):
@@ -112,16 +113,16 @@ class Genesis:
 #Example of how to run this program
 def main():
     #Define the key and project title
-    key="YourKey"
+    key="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"
     httpRef=""
-    projectTitle="DressUp"
+    projectTitle="GenOutfit"
     stylist=Genesis(key, httpRef, projectTitle)#Create object
-    stylist.PushMsgToSystem("text", "You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file.")
+    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file.")
     stylist.PushFileToSystem("GU_Cloths.docx")
     stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommended to me? Here is my selfee.")
-    stylist.PushMsgToUser("image_url", "1.jpg")
+    stylist.PushMsgToUser("image_url", "2.jpg")
     print(stylist)#Show the status of the object
-    print(stylist.TXRX("openai/gpt-4o-mini"))#Send the request and receive it
+    print(stylist.TXRX("openai/gpt-4o-mini"))#transmit request and receive response from it
     del stylist# Delete the object
     
 if __name__ == "__main__":
