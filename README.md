@@ -4,6 +4,11 @@ Genesis.py, a broker between OpenRouter and end users/devices based on OpenRoute
 Current Version: 0.0.3\
 Support Python Version: 3.10
 
+## Basic Principles
+### Theory
+### Application
+### Azure
+
 ## Genesis.py
 This class can help to transmit text, image and markdown to OpenRouter. Here are the PUBLIC functions:
 
@@ -11,7 +16,7 @@ This class can help to transmit text, image and markdown to OpenRouter. Here are
 It is a constructor, you need to set the key in order to use GenAI service from OpenRouter. Set the name of project title is recommended but not necessary. httpRef is not not necessary.
 
 ### TXRX(self, LLM="")
-Main function of Genesis.py, the LLM is for AI/LLM model selection. It can transmit the data and receive it. This function will return string when there is no error. Otherwise, error code (str) will be returned
+Major function of Genesis.py, the LLM is for AI/LLM model selection. It can transmit the data and receive it. This function will return string when there is no error. Otherwise, error code (str) will be returned
 
 ### PushMsgToSystem(self, value)
 Push string into contents of system. Note that it cannot stored non ascii string in it.
