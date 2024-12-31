@@ -68,6 +68,6 @@ In main() of Genesis has shown the example of usage. Here provided two templates
    Demonstrate how to handle get and post request and responsethem
 
 # References
-[1] J. White et al., “A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT,” 2023. Available: https://arxiv.org/pdf/2302.11382
-[2] P. Liu, W. Yuan, J. Fu, Z. Jiang, H. Hayashi, and G. Neubig, “Pre train, prompt, and predict: A systematic survey of prompting methods in natural language processing,” ACM Computing Surveys, vol. 55, no. 9, pp. 1–35, 2023.
+[1] J. White et al., “A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT,” 2023. Available: https://arxiv.org/pdf/2302.11382\
+[2] P. Liu, W. Yuan, J. Fu, Z. Jiang, H. Hayashi, and G. Neubig, “Pre train, prompt, and predict: A systematic survey of prompting methods in natural language processing,” ACM Computing Surveys, vol. 55, no. 9, pp. 1–35, 2023.\
 [3] M. Groenewege, “System prompt design: Bridging the gap between novice mental models and reality,” Discourse & Communication, Aug. 2024, doi: https://doi.org/10.1177/17504813241267055.
