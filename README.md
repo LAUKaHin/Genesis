@@ -6,13 +6,12 @@ Support Python Version: 3.10
 
 ## Basic Principles
 ### Theory
-Prompt engineering is the means by which LLMs are programmed via prompts.^[1] A prompt is a set of instructions provided to an LLMthat programs the LLM by customizing it and/or enhancing or refining its capabilities.^[2] To obtain more desired response from GenAI/LLM, there are not only have user prompt, but also have system prompt. User prompt is the type of prompt that comes from the user. Which is the most common form of prompting and is how prompts are usually delivered in consumer applications.^[2] System prompt is the core set of instructions that we give an LLM to not only scope what it can do, but also how it interacts with the user.^[3]
-\\
-In system prompt, by adding a role, context and instructions, those content can prompt for richer behavior. [3] Although it is hard to say is the information provided from user is rich enough, system prompt can set instruction to make LLM/GenAI keep asking question untill LLM/GenAI has collect sufficient information to generate the satisfactory response.^[1]
+Prompt engineering is the means by which LLMs are programmed via prompts.[1] A prompt is a set of instructions provided to an LLMthat programs the LLM by customizing it and/or enhancing or refining its capabilities.[2] To obtain more desired response from GenAI/LLM, there are not only have user prompt, but also have system prompt. User prompt is the type of prompt that comes from the user. Which is the most common form of prompting and is how prompts are usually delivered in consumer applications.[2] System prompt is the core set of instructions that we give an LLM to not only scope what it can do, but also how it interacts with the user.[3]\
+In system prompt, by adding a role, context and instructions, those content can prompt for richer behavior. [3] Although it is hard to say is the information provided from user is rich enough, system prompt can set instruction to make LLM/GenAI keep asking question untill LLM/GenAI has collect sufficient information to generate the satisfactory response.[1]
 
 ### Application
 Use our one of our project "「智 」識搭" (Use "GenOutfit" for short) as an example, if cloths shops want to use GenAI to give dressing recommendation to customers. The system prompt can be written as: You are a fashion stylist, you will recommend the most suitable dress from my cloths shops for the user according to their face, height and body type. You can only choose the dress provided in my file.\
-User prompt: Hello! what outfits are most suitable for me? Here is my selfee.\\
+User prompt: Hello! what outfits are most suitable for me? Here is my selfee.\
 Then the GenAI will chose the suitable cloths for the customer according the selfie from customer and the cloths list has givin in system prompt.
 
 ### Azure
