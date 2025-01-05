@@ -50,6 +50,12 @@ class Genesis:
                    "type": dicttype,
                     dicttype: value
                }
+        
+    def CheckUserContents(self):
+        return len(self.userContents)>0
+    
+    def CheckSystemContents(self):
+        return len(self.systemContents)>0
     
     #---Public Functions---#
     #Push system message (Add new message in contents of system)
@@ -78,6 +84,9 @@ class Genesis:
     
     #Send msg to AI
     def TXRX(self, LLM=""):
+        if(self.CheckSystemContents()==False or self.CheckUserContents()==False):
+            print("Error in TXRX(): missing systemContent or userContent.")
+            return
         response = requests.post(
           url="https://openrouter.ai/api/v1/chat/completions",
           headers={
@@ -98,31 +107,36 @@ class Genesis:
                     "content": self.userContents
                 }
             ]
-          })
-        )
+          }, ensure_ascii=False).encode("utf-8"))#Set string data to UTF-8 encoding format
         if(response.status_code!=200):
             return str(response.status_code)
         else:
-            return json.loads(response.text)["choices"][0]["message"]["content"]
+            return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]
     
     #Show the info for the class
     def __str__(self):
-        return "Defined Rule:\n" + self.systemContents[0]["text"] + "\n\n" + "User's message:\n" + self.userContents[0]["text"]          
-
+        if(self.CheckSystemContents()==False):
+            print("Error: missing element in systemContents.")
+            return ""
+        elif(self.CheckUserContents()==False):
+            print("Error: missing element in userContents.")
+            return ""
+        else:
+            return "Defined Rule:\n" + self.systemContents[0]["text"] + "\n\n" + "User's message:\n" + self.userContents[0]["text"]
         
 #Example of how to run this program
 def main():
     #Define the key and project title
-    key="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"
+    key="DerKey"
     httpRef=""
     projectTitle="GenOutfit"
     stylist=Genesis(key, httpRef, projectTitle)#Create object
-    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file.")
-    stylist.PushFileToSystem("GU_Cloths.docx")
-    stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommended to me? Here is my selfee.")
-    stylist.PushMsgToUser("image_url", "2.jpg")
+    stylist.PushMsgToSystem("")
+    #stylist.PushFileToSystem("GU_Cloths.docx")
+    stylist.PushMsgToUser("text", "想問吓點解香港科技大學會被叫做The University of Stress and Tension？")
+    #stylist.PushMsgToUser("image_url", "me.jpg")
     print(stylist)#Show the status of the object
-    print(stylist.TXRX("openai/gpt-4o-mini"))#transmit request and receive response from it
+    print("\nGenAI's answer: "+stylist.TXRX("openai/gpt-4o-mini"))#transmit request and receive response from it
     del stylist# Delete the object
     
 if __name__ == "__main__":

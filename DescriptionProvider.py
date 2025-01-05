@@ -10,7 +10,7 @@ import Genesis
 #Example of how to run this program
 def main():
     #Define the key and project title
-    key="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"
+    key="DerKey"
     httpRef=""
     projectTitle="GenOutfit"
     helper=Genesis.Genesis(key, httpRef, projectTitle)#Create object
