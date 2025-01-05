@@ -5,7 +5,7 @@ Current Version: 0.0.4\
 Support Python Version: 3.10
 
 ## News
-Version update:
+Version updated since 5thJanuary,2025:
 1. Supports UTF-8
 2. Check empty content
 
