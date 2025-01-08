@@ -51,10 +51,10 @@ class Genesis:
                     dicttype: value
                }
         
-    def CheckUserContents(self):
+    def CheckUserContentsExist(self):
         return len(self.userContents)>0
     
-    def CheckSystemContents(self):
+    def CheckSystemContentsExist(self):
         return len(self.systemContents)>0
     
     #---Public Functions---#
@@ -65,6 +65,11 @@ class Genesis:
     #Push system attachment (Add new attachment in contents of system)
     def PushFileToSystem(self, value):
         self.systemContents.append(self.CreateDict("text", self.FileToMD(value)))
+    
+    #Check each item in system contents
+    def DebugCheckSystem(self):
+        for i in range(0, len(self.systemContents), 1):
+            print(self.systemContents)
         
     #Pop the last message of the content in system
     def PopMsgOfSystem(self):
@@ -76,11 +81,16 @@ class Genesis:
     
     #Push image to user content by parsing base64 string
     def PushImgToUser(self, value, fileType):
-        self.userContents.append("data:image/"+fileType+";base64,"+value)
+        self.userContents.append(self.CreateDict("text", "data:image/"+fileType+";base64,"+value))
         
     #Push user attachment (Add new attachment in contents of system)
     def PushFileToUser(self, value):
         self.UserContents.append(self.CreateDict("text", self.FileToMD(value)))
+        
+    #Check each item in user contents
+    def DebugCheckUser(self):
+        for i in range(0, len(self.userContents), 1):
+            print(self.userContents)
         
     #Pop the last message of the content in user
     def PopMsgOfUser(self):
@@ -88,7 +98,7 @@ class Genesis:
     
     #Send msg to AI
     def TXRX(self, LLM=""):
-        if(self.CheckSystemContents()==False or self.CheckUserContents()==False):
+        if(self.CheckSystemContentsExist()==False or self.CheckUserContentsExist()==False):
             print("Error in TXRX(): missing systemContent or userContent.")
             return
         response = requests.post(
@@ -114,16 +124,18 @@ class Genesis:
           }, ensure_ascii=False).encode("utf-8"))#Set string data to UTF-8 encoding format
         if(response.status_code!=200):
             return str(response.status_code)
+        elif("Error" in response.text):
+            return response.text
         else:
-            return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]
+            return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]#Need to add condition to check other error
     
     #Show the info for the class
     def __str__(self):
-        name="Genesis v0.0.5\n\n"
-        if(self.CheckSystemContents()==False):
+        name="Genesis v0.0.6\n\n"
+        if(self.CheckSystemContentsExist()==False):
             print("Error: missing element in systemContents.")
             return name
-        elif(self.CheckUserContents()==False):
+        elif(self.CheckUserContentsExist()==False):
             print("Error: missing element in userContents.")
             return name
         else:
