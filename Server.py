@@ -9,6 +9,7 @@ Usage::
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import Genesis
+import os
 
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -29,19 +30,38 @@ class S(BaseHTTPRequestHandler):
         logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
                 str(self.path), str(self.headers), post_data.decode('utf-8'))
         self._set_response()
-        self.app.PushMsgToUser("image_url", "1.jpg")
+        self.app.PushImgToUser(post_data.get("image"), post_data.get("fileType"))
+        hasTextMsg=post_data.get("text")!=""
+        if(hasTextMsg):
+            self.app.PushMsgToUser("text", post_data.get("text"))
         self.app.result=self.app.TXRX("openai/gpt-4o-mini")
         self.wfile.write(("POST request for: "+self.app.result).format(self.path).encode('utf-8'))
+        if(hasTextMsg):
+            self.app.PopMsgOfUser()
+        self.app.PopMsgOfUser()
 
-def run(server_class=HTTPServer, handler_class=S, port=8080):
+def CreateClothsList(path):
+    clothsList=""
+    dirList=os.listdir(path)
+    for i in range(dirList):
+        filename=path+"/"+dirList[i]+"/"+dirList[i]+".md"
+        if(os.path.isfile(filename)==False):
+           continue
+        clothsData=open(filename, 'rb')
+        clothsList+=clothsData
+        clothsData.close()
+    print("[:DEBUG:] "+clothsList)
+    return clothsList
+
+def Run(server_class=HTTPServer, handler_class=S, port=8080):
     #Setup application
-    key="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"
+    key="DerKey"
     httpRef=""
     projectTitle="GenOutfit"
     handler_class.app=Genesis.Genesis(key, httpRef, projectTitle)
-    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file.")
-    handler_class.app.PushFileToSystem("GU_Cloths.docx")
-    handler_class.app.PushMsgToUser("text", "Hello! what color of cloth would you recommended to me? Here is my selfee.")
+    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file. After you give recommendation, you should give simple sumary that include all the cloths you suggested but not need to give descrption to it. The summary need to include: full name of each colths + ID + Color")
+    handler_class.app.PushMsgToSystem(CreateClothsList("GU_Product_Details"))
+    handler_class.app.PushMsgToUser("text", "Hello! what color of cloth would you recommend to me? Here is my selfee.")
 
     #Setup server
     logging.basicConfig(level=logging.INFO)
@@ -61,6 +81,6 @@ if __name__ == '__main__':
     from sys import argv
 
     if len(argv) == 2:
-        run(port=int(argv[1]))
+        Run(port=int(argv[1]))
     else:
-        run()
+        Run()
