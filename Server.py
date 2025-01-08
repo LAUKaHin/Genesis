@@ -38,10 +38,12 @@ class S(BaseHTTPRequestHandler):
         if(hasTextMsg):
             self.app.PushMsgToUser("text", postDict.get("text"))
         #self.app.result=self.app.TXRX("openai/gpt-4o-mini")
-        print(self.app.result)
-        self.wfile.write(("[:DEBUG:] Image inserted: "+str(self.app.userContents[0]!="")))
-        self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[1])))
-        self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))))
+        #print(self.app.result)
+        isExist=self.app.userContents[1]!=""
+        self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
+        self.wfile.write(("[:DEBUG:] File type: "+str(postDict.get("fileType"))+"\n").encode("utf-8"))
+        self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[2].get("text"))+"\n").encode("utf-8"))
+        self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))+"\n").encode("utf-8"))
         #self.wfile.write(("POST request for: "+self.app.result).format(self.path).encode('utf-8'))
         if(hasTextMsg):
             self.app.PopMsgOfUser()
