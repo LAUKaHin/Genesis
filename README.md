@@ -1,13 +1,13 @@
 # Genesis
 Genesis.py, a broker between OpenRouter and end users/devices based on OpenRouter and request library. Because OpenAI has forbiding Hong Kong from using ChatGPT, I have created this class for another approuch.
 
-Current Version: 0.0.4\
+Current Version: 0.0.5\
 Support Python Version: 3.10
 
 ## News
-Version updated since 5thJanuary,2025:
-1. Supports UTF-8
-2. Check empty content
+Version updated since 8thJanuary,2025:
+1. Provide version check
+2. Add function for parsing base64 string to user content
 
 ## Basic Principles
 ### Theory
@@ -50,7 +50,7 @@ Push file into contents of user. Note that the file cannot contain non ascii str
 Pop the last message of the content in user
 
 ### __str__(self)
-Show the info for the class
+Show the info for the class, also show the version of Genesis
 
 ## Limitation
 This python class is depends on OpenRouter and MarkItDown. Due to the their limitation, there are constraints:
@@ -60,7 +60,7 @@ It cannot transmit file to GenAI directly, need to be converted to markdown firs
 
 ### MarkItDown
 Please ensure you input file do not have these contents.
-1. Cannot convert image of folder to base64 string or either bytearray.
+1. Cannot convert image inside file to base64 string or either bytearray.
 2. Cannot convert Math symbol or LaTex to normal text.
 
 ## Template / Example
