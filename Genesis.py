@@ -73,6 +73,10 @@ class Genesis:
     #Push user message (Add new message in contents of user)
     def PushMsgToUser(self, dicttype, value):
         self.userContents.append(self.CreateDict(dicttype, value))
+    
+    #Push image to user content by parsing base64 string
+    def PushImgToUser(self, value, fileType):
+        self.userContents.append("data:image/"+fileType+";base64,"+value)
         
     #Push user attachment (Add new attachment in contents of system)
     def PushFileToUser(self, value):
@@ -115,14 +119,15 @@ class Genesis:
     
     #Show the info for the class
     def __str__(self):
+        name="Genesis v0.0.5\n\n"
         if(self.CheckSystemContents()==False):
             print("Error: missing element in systemContents.")
-            return ""
+            return name
         elif(self.CheckUserContents()==False):
             print("Error: missing element in userContents.")
-            return ""
+            return name
         else:
-            return "Defined Rule:\n" + self.systemContents[0]["text"] + "\n\n" + "User's message:\n" + self.userContents[0]["text"]
+            return name + "Defined Rule:\n" + self.systemContents[0]["text"] + "\n\n" + "User's message:\n" + self.userContents[0]["text"]
         
 #Example of how to run this program
 def main():

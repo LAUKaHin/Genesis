@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import os
 import time
 from googletrans import Translator
+import requests
 
 def translate_table(html_table):
     translator = Translator()
@@ -41,12 +42,33 @@ def translate_table(html_table):
 
     return markdown_table
 
+def save_images(img_elements, folder_path):
+    os.makedirs(folder_path, exist_ok=True)
+    image_links = []
+
+    for img in img_elements:
+        img_url = img['src']
+        img_name = os.path.basename(img_url)
+        img_path = os.path.join(folder_path, img_name)
+
+        # Download and save the image
+        try:
+            response = requests.get(img_url, stream=True)
+            if response.status_code == 200:
+                with open(img_path, 'wb') as file:
+                    for chunk in response.iter_content(1024):
+                        file.write(chunk)
+                image_links.append((img_url, img_path))
+        except Exception as e:
+            print(f"Error saving image {img_url}: {e}")
+
+    return image_links
+
 def scrape_product_details_with_selenium(base_url, start, end, output_folder):
     os.makedirs(output_folder, exist_ok=True)
 
     # Initialize WebDriver
     driver = webdriver.Chrome()  # Ensure you have ChromeDriver installed
-    translator = Translator()  # Initialize Google Translator
 
     # GCL to color name mapping (example for demonstration; expand as needed)
     gcl_to_color = {
@@ -109,7 +131,8 @@ def scrape_product_details_with_selenium(base_url, start, end, output_folder):
     for i in range(start, end + 1):
         product_code = f"u000000000{str(i).zfill(4)}"
         url = f"{base_url}{product_code}"
-        markdown_file = os.path.join(output_folder, f"{product_code}.md")
+        product_folder = os.path.join(output_folder, product_code)
+        markdown_file = os.path.join(product_folder, f"{product_code}.md")
 
         try:
             # Load the page using Selenium
@@ -118,36 +141,20 @@ def scrape_product_details_with_selenium(base_url, start, end, output_folder):
 
             # Parse the loaded page with BeautifulSoup
             soup = BeautifulSoup(driver.page_source, 'html.parser')
-
+            
+            # Ignore sold out or not exist
+            if("缺貨" in str(soup) or "找不到頁面！" in str(soup) or "已售罄" in str(soup)):
+                continue
+            
             # Extract product details
             product_name_element = soup.select_one('.gu-product-detail-list-title')
             product_name = product_name_element.text.strip() if product_name_element else "N/A"
-
-            # Translate the product name
-            if product_name != "N/A":
-                try:
-                    product_name_translated = translator.translate(product_name, src='zh-cn', dest='en').text
-                except Exception as e:
-                    print(f"Translation error for product name: {e}")
-                    product_name_translated = product_name  # Fallback to original name if translation fails
-            else:
-                product_name_translated = "N/A"
 
             price_element = soup.select_one('.h-currency')
             price = price_element.text.strip() if price_element else "N/A"
 
             description_element = soup.select_one('.product-desc')
             description_cn = description_element.text.strip() if description_element else "N/A"
-
-            # Translate to English
-            if description_cn != "N/A":
-                try:
-                    description = translator.translate(description_cn, src='zh-cn', dest='en').text
-                except Exception as e:
-                    print(f"Translation error for description: {e}")
-                    description = description_cn  # Fallback to Chinese if translation fails
-            else:
-                description = "N/A"
 
             material_element = soup.select_one('.desc-content')
             material = material_element.text.strip() if material_element else "N/A"
@@ -172,6 +179,10 @@ def scrape_product_details_with_selenium(base_url, start, end, output_folder):
                 color_name = gcl_to_color.get(gcl_code, gcl_code)  # Map GCL code to color name
                 colors.append(f"{color_name}: ![Color Image]({src})")
 
+            # Extract gallery images
+            gallery_elements = soup.select('ul.picture-viewer-bottom li img')
+            gallery_links = save_images(gallery_elements, product_folder)
+
             # Extract size chart
             size_chart_element = soup.select_one('table.sizechartTb.ke-zeroborder.k-table')
             size_chart = ""
@@ -182,14 +193,16 @@ def scrape_product_details_with_selenium(base_url, start, end, output_folder):
 
             # Generate Markdown content
             markdown_content = (
-                f"# {product_name_translated}"
+                f"# {product_name}\n\n"
                 f"**URL:** [{url}]({url})\n\n"
                 f"**Price:** {price}\n\n"
-                f"**Description:**\n{description}\n\n"
+                f"**Description:**\n{description_cn}\n\n"
                 f"**Material:**\n{material}\n\n"
                 f"**Colors:**\n" + "\n".join(colors) + "\n\n"
                 f"**Available Sizes:** {', '.join(sizes) if sizes else 'No available sizes'}\n\n"
                 f"**Unavailable Sizes:** {', '.join(unavailable_sizes) if unavailable_sizes else 'No unavailable sizes'}\n\n"
+                f"**Gallery Images:**\n" + "\n".join([f"![Gallery Image]({link[0]})" for link in gallery_links]) + "\n\n"
+                f"**Size Chart:**\n\n{size_chart}\n"
             )
 
             # Save the Markdown file
@@ -206,4 +219,4 @@ base_url = "https://www.gu-global.com/hk/zh_HK/product-detail.html?productCode="
 output_folder = "./GU_Product_Details"
 
 # Scrape product details for product codes 0121 to 4000
-scrape_product_details_with_selenium(base_url, 121, 4000, output_folder)
+scrape_product_details_with_selenium(base_url, 512, 4000, output_folder)
