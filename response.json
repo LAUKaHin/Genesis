@@ -1,0 +1,11 @@
+{
+	text: "Your response",
+	cloths:
+	[
+		{
+			name: "Cloth name and ID",
+			color: "",
+			image: ""
+		}
+	]
+}

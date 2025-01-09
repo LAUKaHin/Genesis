@@ -123,15 +123,15 @@ class Genesis:
             ]
           }, ensure_ascii=False).encode("utf-8"))#Set string data to UTF-8 encoding format
         if(response.status_code!=200):
-            return str(response.status_code)
-        elif("Error" in response.text):
-            return response.text
+            return "error"+str(response.status_code)
+        elif("error" in response.text):
+            return str(json.loads(response.content.decode("utf-8"))["error"])
         else:
-            return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]#Need to add condition to check other error
+            return str(json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"])#Need to add condition to check other error
     
     #Show the info for the class
     def __str__(self):
-        name="Genesis v0.0.6\n\n"
+        name="Genesis v0.0.7\n\n"
         if(self.CheckSystemContentsExist()==False):
             print("Error: missing element in systemContents.")
             return name
@@ -143,17 +143,31 @@ class Genesis:
         
 #Example of how to run this program
 def main():
+    import ClothsList
+    import ast
     #Define the key and project title
     key="DerKey"
     httpRef=""
     projectTitle="GenOutfit"
     stylist=Genesis(key, httpRef, projectTitle)#Create object
-    stylist.PushMsgToSystem("")
-    #stylist.PushFileToSystem("GU_Cloths.docx")
-    stylist.PushMsgToUser("text", "想問吓點解香港科技大學會被叫做The University of Stress and Tension？")
-    #stylist.PushMsgToUser("image_url", "me.jpg")
-    print(stylist)#Show the status of the object
-    print("\nGenAI's answer: "+stylist.TXRX("openai/gpt-4o-mini"))#transmit request and receive response from it
+    rxJsonFile=open("response.json", 'r', encoding="utf-8")
+    jsonFormat=rxJsonFile.read()
+    rxJsonFile.close()
+    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all this information in following json format, note that do not include:"+jsonFormat)
+    clothsList=ClothsList.ClothsList("GU_Product_Details")
+    stylist.PushMsgToSystem(clothsList.men)
+    stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommend to me? Here is my selfee.")
+    stylist.PushMsgToUser("image_url", "me.jpg")
+    #print(stylist)#Show the status of the object
+    rxStr=stylist.TXRX("google/gemini-2.0-flash-exp:free")
+    if("error" in rxStr or "429" in rxStr):
+         print("Quota Error")
+    else:
+         rxDict=ast.literal_eval(rxStr[7:-3])
+    
+    print(rxDict)
+    print(type(rxDict))
+    #print("\nGenAI's answer: "+stylist.TXRX("google/gemini-2.0-flash-exp:free"))#transmit request and receive response from it
     del stylist# Delete the object
     
 if __name__ == "__main__":
