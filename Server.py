@@ -9,8 +9,8 @@ Usage::
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import logging
 import Genesis
+import ClothsList
 import ast
-import os
 
 class S(BaseHTTPRequestHandler):
     def _set_response(self):
@@ -37,51 +37,30 @@ class S(BaseHTTPRequestHandler):
         self.app.PushMsgToSystem(self.clothsList.GetClothsList(postDict.get("clothing")))
         if(hasTextMsg):
             self.app.PushMsgToUser("text", postDict.get("text"))
-        #self.app.result=self.app.TXRX("openai/gpt-4o-mini")
+        rxStr=self.app.TXRX("google/gemini-pro-1.5")
+        print(type(rxStr))
+        #print("[:DEBUG:] "+rxStr[7:-3])
+        if("error" in rxStr):
+            print("Quota Error")
+            self.wfile.write(rxStr.encode('utf-8'))
+        else:
+            self.wfile.write(rxStr[7:-3].encode('utf-8'))
         #print(self.app.result)
-        isExist=self.app.userContents[1]!=""
-        self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
-        self.wfile.write(("[:DEBUG:] File type: "+str(postDict.get("fileType"))+"\n").encode("utf-8"))
-        self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[2].get("text"))+"\n").encode("utf-8"))
-        self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))+"\n").encode("utf-8"))
-        #self.wfile.write(("POST request for: "+self.app.result).format(self.path).encode('utf-8'))
+        #isExist=self.app.userContents[1]!=""
+        #self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
+        #self.wfile.write(("[:DEBUG:] File type: "+str(postDict.get("fileType"))+"\n").encode("utf-8"))
+        #self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[2].get("text"))+"\n").encode("utf-8"))
+        #self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))+"\n").encode("utf-8"))
         if(hasTextMsg):
             self.app.PopMsgOfUser()
         self.app.PopMsgOfUser()
 
-class ClothsList():
-    def __init__(self, path):
-        self.men=""
-        self.woman=""
-        self.children=""
-        dirList=os.listdir(path)
-        for i in range(len(dirList)):
-            filename=path+"/"+dirList[i]+"/"+dirList[i]+".md"
-            if(os.path.isfile(filename)==False):
-                continue
-            clothsData=open(filename, 'r')
-            currentCloth=clothsData.read()
-            if("男裝" in currentCloth):
-                self.men+=currentCloth
-            elif("女裝" in currentCloth):
-                self.woman+=currentCloth
-            elif("童裝" in currentCloth):
-                self.children+=currentCloth
-            else:
-                self.men+=currentCloth
-                self.woman+=currentCloth
-                self.children+=currentCloth
-            clothsData.close()
-
     def GetClothsList(self, option):
         if(option=="M" or option=="m"):
-            print(self.men)
             return self.men
         elif(option=="W" or option=="w"):
-            print(self.woman)
             return self.woman
         elif(option=="C" or option=="c"):
-            print(self.children)
             return self.children
         else:
             print("Error: cannot identify input: " +str(option))
@@ -97,15 +76,17 @@ class ClothsList():
             print("Error: cannot identify input: " +str(option))
 
 
-def Run(server_class=HTTPServer, handler_class=S, port=8080):
+def Run(server_class=HTTPServer, handler_class=S, key="", port=8080):
     #Setup application
-    key="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"
     httpRef=""
     projectTitle="GenOutfit"
+    rxJsonFile=open("response.json", 'r', encoding="utf-8")
+    jsonFormat=rxJsonFile.read()
+    rxJsonFile.close()
     handler_class.app=Genesis.Genesis(key, httpRef, projectTitle)
-    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You can only choose the dress provided in my file. After you give recommendation, you should give simple sumary that include all the cloths you suggested but not need to give descrption to it. The summary need to include: full name of each colths + ID + Color")
-    handler_class.app.PushMsgToUser("text", "Hello! what color of cloth would you recommend to me? Here is my selfee.")
-    handler_class.clothsList=ClothsList("GU_ClothsList")
+    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type in the selfie. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all this information in following json format, no other information or format is allowed:"+jsonFormat)
+    handler_class.app.PushMsgToUser("text", "Hello! what cloths would you recommend to me? Here is my selfee.")
+    handler_class.clothsList=ClothsList.ClothsList("GU_ClothsList")
     #Setup server
     logging.basicConfig(level=logging.INFO)
     server_address = ('', port)
@@ -123,7 +104,7 @@ def Run(server_class=HTTPServer, handler_class=S, port=8080):
 if __name__ == '__main__':
     from sys import argv
 
-    if len(argv) == 2:
-        Run(port=int(argv[1]))
+    if len(argv) >= 3:
+        Run(key=str(argv[1]),port=int(argv[2]))
     else:
-        Run()
+        Run(key=str(argv[1]))
