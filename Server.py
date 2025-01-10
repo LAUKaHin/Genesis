@@ -38,13 +38,15 @@ class S(BaseHTTPRequestHandler):
         if(hasTextMsg):
             self.app.PushMsgToUser("text", postDict.get("text"))
         rxStr=self.app.TXRX("google/gemini-pro-1.5")
-        print(type(rxStr))
+        print(rxStr)
         #print("[:DEBUG:] "+rxStr[7:-3])
         if("error" in rxStr):
             print("Quota Error")
-            self.wfile.write(rxStr.encode('utf-8'))
-        else:
+            self.wfile.write(str({"text": rxStr}).encode('utf-8'))
+        elif("json```" in rxStr):
             self.wfile.write(rxStr[7:-3].encode('utf-8'))
+        else:
+            self.wfile.write(rxStr.encode('utf-8'))
         #print(self.app.result)
         #isExist=self.app.userContents[1]!=""
         #self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
@@ -55,27 +57,6 @@ class S(BaseHTTPRequestHandler):
             self.app.PopMsgOfUser()
         self.app.PopMsgOfUser()
 
-    def GetClothsList(self, option):
-        if(option=="M" or option=="m"):
-            return self.men
-        elif(option=="W" or option=="w"):
-            return self.woman
-        elif(option=="C" or option=="c"):
-            return self.children
-        else:
-            print("Error: cannot identify input: " +str(option))
-
-    def PrintClothsList(self,option):
-        if(option=="M" or option=="m"):
-            print(self.men)
-        elif(option=="W" or option=="w"):
-            print(self.woman)
-        elif(option=="C" or option=="c"):
-            print(self.children)
-        else:
-            print("Error: cannot identify input: " +str(option))
-
-
 def Run(server_class=HTTPServer, handler_class=S, key="", port=8080):
     #Setup application
     httpRef=""
@@ -84,7 +65,7 @@ def Run(server_class=HTTPServer, handler_class=S, key="", port=8080):
     jsonFormat=rxJsonFile.read()
     rxJsonFile.close()
     handler_class.app=Genesis.Genesis(key, httpRef, projectTitle)
-    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type in the selfie. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all this information in following json format, no other information or format is allowed:"+jsonFormat)
+    handler_class.app.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type in the selfie. You need to give explaination for your choice. You can only choose the dress provided in my file. You should include all these information in following json format, you should selete the the url of the image that match the color and the cloth of your choice. Do not use new line for the response. No other information or format is allowed:"+jsonFormat)
     handler_class.app.PushMsgToUser("text", "Hello! what cloths would you recommend to me? Here is my selfee.")
     handler_class.clothsList=ClothsList.ClothsList("GU_ClothsList")
     #Setup server
@@ -106,5 +87,7 @@ if __name__ == '__main__':
 
     if len(argv) >= 3:
         Run(key=str(argv[1]),port=int(argv[2]))
-    else:
+    elif len(argv) >= 2:
         Run(key=str(argv[1]))
+    else:
+        Run()

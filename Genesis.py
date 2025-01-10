@@ -125,13 +125,13 @@ class Genesis:
         if(response.status_code!=200):
             return "error"+str(response.status_code)
         elif("error" in response.text):
-            return str(json.loads(response.content.decode("utf-8"))["error"])
+            return json.loads(response.content.decode("utf-8"))["error"]
         else:
-            return str(json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"])#Need to add condition to check other error
+            return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]
     
     #Show the info for the class
     def __str__(self):
-        name="Genesis v0.0.7\n\n"
+        name="Genesis v0.0.8\n\n"
         if(self.CheckSystemContentsExist()==False):
             print("Error: missing element in systemContents.")
             return name
@@ -153,7 +153,7 @@ def main():
     rxJsonFile=open("response.json", 'r', encoding="utf-8")
     jsonFormat=rxJsonFile.read()
     rxJsonFile.close()
-    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all this information in following json format, note that do not include:"+jsonFormat)
+    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all thesse information in following json format, note that do not include:"+jsonFormat)
     clothsList=ClothsList.ClothsList("GU_Product_Details")
     stylist.PushMsgToSystem(clothsList.men)
     stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommend to me? Here is my selfee.")
