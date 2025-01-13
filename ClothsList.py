@@ -32,13 +32,10 @@ class ClothsList():
 
     def GetClothsList(self, option):
         if(option=="M" or option=="m"):
-            print(self.men)
             return self.men
         elif(option=="W" or option=="w"):
-            print(self.woman)
             return self.woman
         elif(option=="C" or option=="c"):
-            print(self.children)
             return self.children
         else:
             print("Error: cannot identify input: " +str(option))
