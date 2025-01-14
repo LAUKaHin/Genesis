@@ -126,12 +126,14 @@ class Genesis:
             return "error"+str(response.status_code)
         elif("error" in response.text):
             return json.loads(response.content.decode("utf-8"))["error"]
-        else:
+        elif("choices" in response.text):#Handle the OpenRouter response nothing
             return json.loads(response.content.decode("utf-8"))["choices"][0]["message"]["content"]
+        else:
+            return "error 520: OpenRouter has failed to response"
     
     #Show the info for the class
     def __str__(self):
-        name="Genesis v0.0.8\n\n"
+        name="Genesis v0.0.9\n\n"
         if(self.CheckSystemContentsExist()==False):
             print("Error: missing element in systemContents.")
             return name

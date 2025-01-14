@@ -39,11 +39,11 @@ class S(BaseHTTPRequestHandler):
         if(self.netPort==8023):
             rxStr=self.app.TXRX("google/gemini-pro-1.5")
         else:
-            isExist=self.app.userContents[1]!=""
-            self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
-            self.wfile.write(("[:DEBUG:] File type: "+str(postDict.get("fileType"))+"\n").encode("utf-8"))
-            self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[2].get("text"))+"\n").encode("utf-8"))
-            self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))+"\n").encode("utf-8"))
+            #isExist=self.app.userContents[1]!=""
+            #self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
+            #self.wfile.write(("[:DEBUG:] File type: "+str(postDict.get("fileType"))+"\n").encode("utf-8"))
+            #self.wfile.write(("[:DEBUG:] Text inserted: "+str(self.app.userContents[2].get("text"))+"\n").encode("utf-8"))
+            #self.wfile.write(("[:DEBUG:] Clothing inserted: "+str(postDict.get("clothing"))+"\n").encode("utf-8"))
             rxStr="""{"text": "你selfie張相影得好靚！睇得出你身形勻稱，高度適中。我推薦你著女裝 Oxford Striped Short Shirt 352564，呢件衫嘅窄間隔直紋圖案好易襯衫，而且剪裁修身，會令你望落更加俐落。同時，Oxford 布料舒適透氣，好啱夏天著。如果想更加突出腰身，可以配搭一條幼腰帶。", "cloths": [{"name": "女裝 Oxford Striped Short Shirt 352564", "color": "GCL34", "image": "https://www.gu-global.com/hk/hmall/test/u0000000003060/main/first/1000/1.jpg"}]}"""
 
         if("error" in rxStr):
