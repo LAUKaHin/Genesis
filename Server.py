@@ -26,6 +26,7 @@ class S(BaseHTTPRequestHandler):
         #print(self.path)
 
     def do_POST(self):
+        rxStr=""
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
         #logging.info("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",str(self.path), str(self.headers), post_data.decode('utf-8'))
@@ -38,6 +39,8 @@ class S(BaseHTTPRequestHandler):
             self.app.PushMsgToUser("text", postDict.get("text"))
         if(self.netPort==8023):
             rxStr=self.app.TXRX("google/gemini-pro-1.5")
+            while("error 520" in rxStr):#Rerey to get response
+                rxStr=self.app.TXRX("google/gemini-pro-1.5")
         else:
             #isExist=self.app.userContents[1]!=""
             #self.wfile.write(("[:DEBUG:] Image inserted: "+str(isExist)+"\n").encode("utf-8"))
