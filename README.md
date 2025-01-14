@@ -1,13 +1,12 @@
 # Genesis
 Genesis.py, a broker between OpenRouter and end users/devices based on OpenRouter and request library. Because OpenAI has forbiding Hong Kong from using ChatGPT, I have created this class for another approuch.
 
-Current Version: 0.0.5\
+Current Version: 0.0.9\
 Support Python Version: 3.10
 
 ## News
-Version updated since 8thJanuary,2025:
-1. Provide version check
-2. Add function for parsing base64 string to user content
+Version updated since 14thJanuary,2025:
+Add OpenRouter crash error
 
 ## Basic Principles
 ### Theory
