@@ -5,8 +5,10 @@ Current Version: 0.0.9\
 Support Python Version: 3.10
 
 ## News
-Version updated since 14thJanuary,2025:
-Add OpenRouter crash error
+Version updated since 18thJanuary,2025:
+1. Because OpenAI has forbidden from using ChatGPT through OpenRouter. This is the final update for Genesis.py
+2. provide provider selection in TXRX()
+
 
 ## Basic Principles
 ### Theory
@@ -27,8 +29,11 @@ This class can help to transmit text, image and markdown to OpenRouter. Here are
 ### __init__(self, key, httpRef, projTitle)
 It is a constructor, you need to set the key in order to use GenAI service from OpenRouter. Set the name of project title is recommended but not necessary. httpRef is not not necessary.
 
-### TXRX(self, LLM="")
+### TXRX(self, LLM="", provider=[""])
 Major function of Genesis.py, the LLM is for AI/LLM model selection. It can transmit the data and receive it. This function will return string when there is no error. Otherwise, error code (str) will be returned
+
+### PushImgToUser(self, value, fileType):
+Push image to user content by parsing base64 string
 
 ### PushMsgToSystem(self, value)
 Push string into contents of system. Note that it cannot stored non ascii string in it.
