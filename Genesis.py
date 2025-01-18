@@ -97,7 +97,7 @@ class Genesis:
         self.userContents.pop()
     
     #Send msg to AI
-    def TXRX(self, LLM=""):
+    def TXRX(self, LLM="", provider=[""]):
         if(self.CheckSystemContentsExist()==False or self.CheckUserContentsExist()==False):
             print("Error in TXRX(): missing systemContent or userContent.")
             return
@@ -120,7 +120,11 @@ class Genesis:
                     "role": "user",
                     "content": self.userContents
                 }
-            ]
+            ],
+            "provider":
+            {
+              "order": provider
+            }
           }, ensure_ascii=False).encode("utf-8"))#Set string data to UTF-8 encoding format
         if(response.status_code!=200):
             return "error"+str(response.status_code)
@@ -133,7 +137,7 @@ class Genesis:
     
     #Show the info for the class
     def __str__(self):
-        name="Genesis v0.0.9\n\n"
+        name="Genesis v0.1.0\n\n"
         if(self.CheckSystemContentsExist()==False):
             print("Error: missing element in systemContents.")
             return name
@@ -145,32 +149,15 @@ class Genesis:
         
 #Example of how to run this program
 def main():
-    import ClothsList
-    import ast
     #Define the key and project title
-    key="DerKey"
+    key="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"
     httpRef=""
-    projectTitle="GenOutfit"
-    stylist=Genesis(key, httpRef, projectTitle)#Create object
-    rxJsonFile=open("response.json", 'r', encoding="utf-8")
-    jsonFormat=rxJsonFile.read()
-    rxJsonFile.close()
-    stylist.PushMsgToSystem("You are a fashion stylist, you will recommend the most suitable dress from GU for the user according to their face, height and body type. You need to give explaination for your choice. You can only choose the dress provided in my file. you should include all thesse information in following json format, note that do not include:"+jsonFormat)
-    clothsList=ClothsList.ClothsList("GU_Product_Details")
-    stylist.PushMsgToSystem(clothsList.men)
-    stylist.PushMsgToUser("text", "Hello! what color of cloth would you recommend to me? Here is my selfee.")
-    stylist.PushMsgToUser("image_url", "me.jpg")
-    #print(stylist)#Show the status of the object
-    rxStr=stylist.TXRX("google/gemini-2.0-flash-exp:free")
-    if("error" in rxStr or "429" in rxStr):
-         print("Quota Error")
-    else:
-         rxDict=ast.literal_eval(rxStr[7:-3])
-    
-    print(rxDict)
-    print(type(rxDict))
-    #print("\nGenAI's answer: "+stylist.TXRX("google/gemini-2.0-flash-exp:free"))#transmit request and receive response from it
-    del stylist# Delete the object
+    projectTitle="Investment"
+    AI=Genesis(key, httpRef, projectTitle)#Create object
+    AI.PushMsgToSystem("你係投資顧問，你需要提供具體的投資建議或推薦特定股票。")#Set system prompt msg
+    AI.PushMsgToUser("text", "Hello! 身為價值投資者，你會推薦我投資咩股票？")#Set user prompt msg
+    print("\AI's answer: "+str(AI.TXRX("openai/gpt-4o-2024-08-06", "Azure")))#transmit request and receive response from it
+    del AI# Delete the object
     
 if __name__ == "__main__":
     main()
