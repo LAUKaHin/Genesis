@@ -4,7 +4,7 @@ Genesis.py is a sophisticated broker between OpenRouter and end users/devices, p
 
 **Current Version:** 0.1.1  
 **Supported Python Version:** 3.10+  
-**Author:** Victor Mctrix (Enhanced)
+**Author:** Victor McTrix (Enhanced)
 
 ## 🚀 Recent Updates
 
@@ -387,5 +387,3 @@ Genesis.py is maintained as part of a larger trading and analysis system. For is
 [3] M. Groenewege, "System prompt design: Bridging the gap between novice mental models and reality," Discourse & Communication, Aug. 2024, doi: https://doi.org/10.1177/17504813241267055.
 
 ---
-
-**© 2025 Victor Mctrix. Enhanced for production use in financial analysis and trading systems.**
