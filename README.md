@@ -1,80 +1,391 @@
-# Genesis
-Genesis.py, a broker between OpenRouter and end users/devices based on OpenRouter and request library. Because OpenAI has forbiding Hong Kong from using ChatGPT, I have created this class for another approuch.
+# Genesis.py - Universal GenAI Interface
 
-Current Version: 0.1.0\
-Support Python Version: 3.10
+Genesis.py is a sophisticated broker between OpenRouter and end users/devices, providing a streamlined interface for accessing multiple GenAI models through OpenRouter's API. Originally created as an alternative solution for Hong Kong users who cannot access ChatGPT directly.
 
-## News
-Version updated since 18thJanuary,2025:
-1. Because OpenAI has forbidden from using ChatGPT through OpenRouter. This is the final update for Genesis.py
-2. provide provider selection in TXRX()
+**Current Version:** 0.1.1  
+**Supported Python Version:** 3.10+  
+**Author:** Victor Mctrix (Enhanced)
 
+## 🚀 Recent Updates
 
-## Basic Principles
-### Theory
-Prompt engineering is the means by which LLMs are programmed via prompts.[1] A prompt is a set of instructions provided to an LLMthat programs the LLM by customizing it and/or enhancing or refining its capabilities.[2] To obtain more desired response from GenAI/LLM, there are not only have user prompt, but also have system prompt. User prompt is the type of prompt that comes from the user. Which is the most common form of prompting and is how prompts are usually delivered in consumer applications.[2] System prompt is the core set of instructions that we give an LLM to not only scope what it can do, but also how it interacts with the user.[3]\
-In system prompt, by adding a role, context and instructions, those content can prompt for richer behavior. [3] Although it is hard to say is the information provided from user is rich enough, system prompt can set instruction to make LLM/GenAI keep asking question untill LLM/GenAI has collect sufficient information to generate the satisfactory response.[1]
+**Version 0.1.1 (Enhanced) - Latest:**
+- ✅ Enhanced error handling and timeout management
+- ✅ Improved image handling with automatic format detection
+- ✅ Better JSON response parsing and validation
+- ✅ Added `ClearAll()` method for content management
+- ✅ Enhanced provider selection with fallback options
+- ✅ Optimized for large batch processing (10k token support)
+- ✅ Fixed file encoding and base64 conversion issues
+- ✅ Added comprehensive debugging and logging features
 
-### Application
-Use one of our project "「智 」識搭" (Use "GenOutfit" for short) as an example, if cloths shops want to use GenAI to give dressing recommendation to customers. The system prompt can be written as: You are a fashion stylist, you will recommend the most suitable dress from my cloths shops for the user according to their face, height and body type. You can only choose the dress provided in my file.\
-User prompt: Hello! what outfits are most suitable for me? Here is my selfee.\
-Then the GenAI will chose the suitable cloths for the customer according the selfie from customer and the cloths list has givin in system prompt.
+**Version 0.1.0 (January 18th, 2025):**
+- 🔄 Final update addressing OpenAI access restrictions through OpenRouter
+- ➕ Added provider selection in `TXRX()` method
+- 📝 Initial stable release
 
-### Azure
-Use the previous as an example, To prevent the big load of the client devicce, it is suggested Azure virtual machine service be used, which stored all cloths information in a list. When the server has received the post request from client, it will also send the cloths list to OpenRouter. To make the application more scalable, author strongly recommended all the cloths are listed into one file/document instead of separated individually.
+## 📚 Theoretical Foundation
 
-## Genesis.py
-This class can help to transmit text, image and markdown to OpenRouter. Here are the PUBLIC functions:
+### Prompt Engineering Principles
 
-### __init__(self, key, httpRef, projTitle)
-It is a constructor, you need to set the key in order to use GenAI service from OpenRouter. Set the name of project title is recommended but not necessary. httpRef is not not necessary.
+Prompt engineering is the methodology for programming Large Language Models (LLMs) through carefully crafted instructions. Genesis.py implements a dual-prompt system:
 
-### TXRX(self, LLM="", provider=[""])
-Major function of Genesis.py, the LLM is for AI/LLM model selection. It can transmit the data and receive it. This function will return string when there is no error. Otherwise, error code (str) will be returned
+**System Prompts:** Core instructions that define the AI's role, behavior, and constraints. These set the foundational context for all interactions.
 
-### PushImgToUser(self, value, fileType):
-Push image to user content by parsing base64 string
+**User Prompts:** Dynamic input from users that triggers specific responses within the system-defined framework.
 
-### PushMsgToSystem(self, value)
-Push string into contents of system. Note that it cannot stored non ascii string in it.
+### Architecture Benefits
 
-### PushFileToSystem(self, value)
-Push file into contents of system. Note that the file cannot contain non ascii string, special math symbols and images.
+By separating system and user contexts, Genesis.py enables:
+- **Role-based AI behavior** with consistent personality and expertise
+- **Context-aware responses** tailored to specific use cases
+- **Scalable applications** suitable for enterprise deployment
+- **Multi-modal input support** (text, images, files)
 
-### PopMsgOfSystem(self)
-Pop the last message of the content in system
+## 🔧 Core Features
 
-### PushMsgToUser(self, dicttype, value)
-Push string into contents of user. Note that it cannot stored non ascii string in it.
+### Multi-Modal Content Support
+- **Text Messages:** Direct string input with UTF-8 support
+- **Image Processing:** Automatic base64 conversion with format detection (JPEG, PNG, WebP, GIF)
+- **File Integration:** Markdown conversion for documents, PDFs, and structured data
+- **URL Handling:** Direct image URL processing without local conversion
 
-### PushFileToUser(self, value)
-Push file into contents of user. Note that the file cannot contain non ascii string, special math symbols and images.
+### Enhanced AI Model Access
+- **Multiple Providers:** OpenAI, Google, Anthropic, and other OpenRouter-supported models
+- **Provider Fallback:** Automatic failover when primary providers are unavailable
+- **Token Management:** Configurable limits up to 10,000 tokens for large responses
+- **Temperature Control:** Adjustable creativity levels (0.0-1.0)
 
-### PopMsgOfUser(self)
-Pop the last message of the content in user
+### Robust Error Handling
+- **Timeout Management:** 30-second default with configurable options
+- **Response Validation:** JSON parsing with error recovery
+- **Network Resilience:** Automatic retry and detailed error reporting
+- **Debug Support:** Comprehensive logging for troubleshooting
 
-### __str__(self)
-Show the info for the class, also show the version of Genesis
+## 📖 API Reference
 
-## Limitation
-This python class is depends on OpenRouter and MarkItDown. Due to the their limitation, there are constraints:
+### Constructor
 
-### OpenRouter
-It cannot transmit file to GenAI directly, need to be converted to markdown first. Library namely MarkItDown will be used.
+```python
+Genesis(key: str, httpRef: str = "", projTitle: str = "")
+```
 
-### MarkItDown
-Please ensure you input file do not have these contents.
-1. Cannot convert image inside file to base64 string or either bytearray.
-2. Cannot convert Math symbol or LaTex to normal text.
+**Parameters:**
+- `key`: OpenRouter API key (required)
+- `httpRef`: HTTP referer for usage tracking (optional)
+- `projTitle`: Project title for organization (optional)
 
-## Template / Example
-In main() of Genesis has shown the example of usage. Here provided two templates to showcase how to use Genesis.py
-1. DescriptionProvider.py\
-   Show how to input filename in CMD and upload image to the GenAI to finish the task
-2. Server.py\
-   Demonstrate how to handle get and post request and responsethem
+### Primary Methods
 
-# References
-[1] J. White et al., “A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT,” 2023. Available: https://arxiv.org/pdf/2302.11382\
-[2] P. Liu, W. Yuan, J. Fu, Z. Jiang, H. Hayashi, and G. Neubig, “Pre train, prompt, and predict: A systematic survey of prompting methods in natural language processing,” ACM Computing Surveys, vol. 55, no. 9, pp. 1–35, 2023.\
-[3] M. Groenewege, “System prompt design: Bridging the gap between novice mental models and reality,” Discourse & Communication, Aug. 2024, doi: https://doi.org/10.1177/17504813241267055.
+#### `TXRX(LLM: str, provider: List[str], max_tokens: int, temperature: float) -> Optional[str]`
+Main communication method with enhanced parameter support.
+
+**Parameters:**
+- `LLM`: Model identifier (default: "openai/gpt-4o-2024-11-20")
+- `provider`: Preferred provider list (default: ["OpenAI"])
+- `max_tokens`: Response length limit (optional)
+- `temperature`: Creativity level 0.0-1.0 (optional)
+
+**Returns:** AI response string or None if error
+
+#### Content Management Methods
+
+| Method | Purpose | Returns |
+|--------|---------|---------|
+| `PushMsgToSystem(value: str)` | Add system instruction | None |
+| `PushFileToSystem(filename: str)` | Add file to system context | bool |
+| `PushMsgToUser(dicttype: str, value: str)` | Add user message | None |
+| `PushImgToUser(value: str, fileType: str)` | Add image to user context | None |
+| `PushFileToUser(filename: str)` | Add file to user context | bool |
+| `PopMsgOfSystem()` | Remove last system message | bool |
+| `PopMsgOfUser()` | Remove last user message | bool |
+| `ClearAll()` | Clear all content | None |
+
+#### Utility Methods
+
+| Method | Purpose | Returns |
+|--------|---------|---------|
+| `CheckSystemContentsExist()` | Verify system content | bool |
+| `CheckUserContentsExist()` | Verify user content | bool |
+| `DebugCheckSystem()` | Display system contents | None |
+| `DebugCheckUser()` | Display user contents | None |
+
+## 💡 Usage Examples
+
+### Basic Text Interaction
+
+```python
+import os
+from Genesis import Genesis
+
+# Initialize with API key
+api_key = os.getenv('OPENROUTER_API_KEY')
+AI = Genesis(api_key, "https://myapp.com", "My Project")
+
+# Set system context
+AI.PushMsgToSystem("You are a helpful programming assistant.")
+
+# Add user query
+AI.PushMsgToUser("text", "Explain Python list comprehensions with examples.")
+
+# Get response
+response = AI.TXRX(
+    LLM="openai/gpt-4o-2024-11-20",
+    provider=["OpenAI"],
+    max_tokens=500,
+    temperature=0.7
+)
+
+print(response)
+```
+
+### Image Analysis Application
+
+```python
+# Financial document analysis
+AI = Genesis(api_key, project_title="Financial Analysis")
+
+AI.PushMsgToSystem("""You are a financial analyst. Analyze charts and 
+provide investment insights based on visual data.""")
+
+# Add image from file
+AI.PushImgToUser("stock_chart.png")
+AI.PushMsgToUser("text", "What trends do you see in this stock chart?")
+
+response = AI.TXRX(
+    LLM="google/gemini-2.5-flash-preview-05-20",
+    provider=["google-ai-studio"],
+    max_tokens=1000
+)
+```
+
+### Batch Processing for Large Datasets
+
+```python
+# S&P 500 stock analysis
+AI = Genesis(api_key, project_title="Bulk Stock Analysis")
+
+AI.PushMsgToSystem("""You are a stock analyst. Provide investment scores 
+(0.0-1.0) for all stocks in JSON format: {"SYMBOL": score, ...}""")
+
+# Process multiple stocks
+symbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"]
+AI.PushMsgToUser("text", ", ".join(symbols))
+
+response = AI.TXRX(
+    LLM="google/gemini-2.5-flash-preview-05-20",
+    provider=["google-ai-studio", "google-vertex"],
+    max_tokens=10000,  # Large response for batch processing
+    temperature=0.3
+)
+```
+
+### File Processing Pipeline
+
+```python
+# Document analysis workflow
+AI = Genesis(api_key, project_title="Document Processing")
+
+# Add multiple context files
+AI.PushFileToSystem("company_data.pdf")
+AI.PushFileToSystem("market_report.docx")
+
+# Query based on combined context
+AI.PushMsgToUser("text", "Based on the provided documents, what are the key investment risks?")
+
+response = AI.TXRX(
+    LLM="anthropic/claude-3-sonnet",
+    provider=["Anthropic"],
+    max_tokens=2000
+)
+```
+
+## ⚠️ Limitations and Requirements
+
+### Dependencies
+
+```bash
+pip install requests markitdown python-dotenv
+```
+
+### OpenRouter Constraints
+- **File Limitations:** Direct file upload not supported; requires markdown conversion
+- **Rate Limits:** Subject to OpenRouter's API rate limiting
+- **Model Availability:** Dependent on OpenRouter's model catalog
+- **Token Costs:** Usage charges apply based on model and token consumption
+
+### MarkItDown Limitations
+- **Image Extraction:** Cannot convert embedded images to base64
+- **Mathematical Notation:** LaTeX and complex math symbols may not convert properly
+- **Formatting Loss:** Some document formatting may be simplified during conversion
+- **File Size Limits:** Large files may cause processing delays
+
+### File Format Support
+
+**Supported for Conversion:**
+- PDF documents
+- Microsoft Office files (Word, Excel, PowerPoint)
+- Plain text files
+- Markdown files
+- CSV and TSV data
+
+**Image Formats:**
+- JPEG/JPG
+- PNG
+- WebP
+- GIF
+
+## 🔒 Security Best Practices
+
+### API Key Management
+
+```python
+# ✅ Recommended: Environment variables
+import os
+api_key = os.getenv('OPENROUTER_API_KEY')
+
+# ❌ Avoid: Hardcoded keys
+api_key = "sk-or-v1-..."  # Never do this in production
+```
+
+### Data Privacy
+- **Sensitive Data:** Avoid sending confidential information through external APIs
+- **Local Processing:** Consider local preprocessing for sensitive documents
+- **Audit Logging:** Implement usage tracking for compliance requirements
+
+## 🧪 Testing and Debugging
+
+### Debug Mode
+
+```python
+# Enable comprehensive debugging
+AI = Genesis(api_key, project_title="Debug Session")
+AI.PushMsgToSystem("Test system message")
+AI.PushMsgToUser("text", "Test user message")
+
+# Check content before sending
+AI.DebugCheckSystem()
+AI.DebugCheckUser()
+
+# Monitor errors
+response = AI.TXRX()
+if not response:
+    print(f"Error: {AI.last_error}")
+```
+
+### Error Handling Patterns
+
+```python
+try:
+    response = AI.TXRX(timeout=60)
+    if response:
+        # Process successful response
+        return process_response(response)
+    else:
+        # Handle API errors
+        log_error(AI.last_error)
+        return fallback_response()
+        
+except Exception as e:
+    # Handle unexpected errors
+    log_exception(e)
+    return error_response()
+```
+
+## 🌐 Production Deployment
+
+### Azure Cloud Integration
+
+For scalable applications, deploy Genesis.py on Azure Virtual Machines:
+
+```python
+# Azure-optimized configuration
+class ProductionGenesis:
+    def __init__(self, key: str):
+        self.AI = Genesis(
+            key=key,
+            httpRef="https://myapp.azurewebsites.net",
+            projTitle="Production App v1.0"
+        )
+        self.setup_logging()
+    
+    def setup_logging(self):
+        # Configure Azure Application Insights
+        pass
+    
+    def process_request(self, user_data: dict) -> dict:
+        # Production request handler
+        self.AI.ClearAll()  # Reset for new session
+        return self.generate_response(user_data)
+```
+
+### Load Balancing
+
+For high-volume applications, implement provider rotation:
+
+```python
+providers = [
+    ["OpenAI"],
+    ["google-ai-studio"],
+    ["Anthropic"],
+    ["Meta"]
+]
+
+for provider in providers:
+    response = AI.TXRX(provider=provider)
+    if response:
+        break  # Success
+```
+
+## 📊 Performance Optimization
+
+### Token Efficiency
+
+```python
+# Optimize for large batch processing
+def optimize_for_batch(symbols: List[str]) -> dict:
+    AI = Genesis(api_key)
+    
+    # Concise system prompt
+    AI.PushMsgToSystem("Return JSON: {\"SYMBOL\": score}")
+    
+    # Batch symbols efficiently
+    AI.PushMsgToUser("text", ",".join(symbols))
+    
+    # Use high token limit for complete responses
+    return AI.TXRX(max_tokens=10000, temperature=0.3)
+```
+
+### Memory Management
+
+```python
+# Clean up for long-running processes
+def periodic_cleanup(AI: Genesis):
+    if len(AI.systemContents) > 10:
+        AI.ClearAll()
+        # Reload essential system context
+        AI.PushMsgToSystem(essential_system_prompt)
+```
+
+## 📈 Version History
+
+| Version | Release Date | Key Features |
+|---------|-------------|--------------|
+| 0.1.1 | 2025 | Enhanced error handling, batch processing, provider fallback |
+| 0.1.0 | Jan 18, 2025 | Initial stable release, provider selection |
+| 0.0.x | Development | Core functionality, basic OpenRouter integration |
+
+## 🤝 Contributing
+
+Genesis.py is maintained as part of a larger trading and analysis system. For issues or feature requests, please ensure compatibility with the existing COMP2012 Enhanced Trading Bot architecture.
+
+## 📚 References
+
+[1] J. White et al., "A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT," 2023. Available: https://arxiv.org/pdf/2302.11382
+
+[2] P. Liu, W. Yuan, J. Fu, Z. Jiang, H. Hayashi, and G. Neubig, "Pre train, prompt, and predict: A systematic survey of prompting methods in natural language processing," ACM Computing Surveys, vol. 55, no. 9, pp. 1–35, 2023.
+
+[3] M. Groenewege, "System prompt design: Bridging the gap between novice mental models and reality," Discourse & Communication, Aug. 2024, doi: https://doi.org/10.1177/17504813241267055.
+
+---
+
+**© 2025 Victor Mctrix. Enhanced for production use in financial analysis and trading systems.**
