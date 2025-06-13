@@ -2,7 +2,7 @@
 
 Genesis.py is a sophisticated broker between OpenRouter and end users/devices, providing a streamlined interface for accessing multiple GenAI models through OpenRouter's API. Originally created as an alternative solution for Hong Kong users who cannot access ChatGPT directly.
 
-**Current Version:** 0.1.1  
+**Current Version:** 0.1.1 Lambda
 **Supported Python Version:** 3.10+  
 **Author:** Victor McTrix (Enhanced)
 
