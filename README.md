@@ -376,7 +376,7 @@ def periodic_cleanup(AI: Genesis):
 
 ## 🤝 Contributing
 
-Genesis.py is maintained as part of a larger trading and analysis system. For issues or feature requests, please ensure compatibility with the existing COMP2012 Enhanced Trading Bot architecture.
+Genesis.py is maintained as part of a larger trading and analysis system. For issues or feature requests, please ensure compatibility with the existing ProjectExponent architecture.
 
 ## 📚 References
 
