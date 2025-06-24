@@ -4,7 +4,7 @@ Genesis.py is a sophisticated broker between OpenRouter and end users/devices, p
 
 **Current Version:** 0.1.1 Lambda  
 **Supported Python Version:** 3.10+  
-**Author:** Victor Mctrix (Enhanced)
+**Author:** Victor Mctrix (Code improved by Claude)
 
 ## 🚀 Recent Updates
 
