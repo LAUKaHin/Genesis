@@ -37,7 +37,7 @@ class Genesis:
     # ---Helper Functions---
     def ImgToBase64(self, filename: str) -> Optional[str]:
         """
-        ✅ FIXED: Convert image file to base64 string with better error handling
+        [SUCCESS] FIXED: Convert image file to base64 string with better error handling
         
         Args:
             filename: Path to image file
@@ -77,7 +77,7 @@ class Genesis:
     
     def FileToMD(self, filename: str) -> Optional[str]:
         """
-        ✅ ENHANCED: Convert file to markdown string with error handling
+        [SUCCESS] ENHANCED: Convert file to markdown string with error handling
         
         Args:
             filename: Path to file
@@ -100,7 +100,7 @@ class Genesis:
     
     def CreateDict(self, dicttype: str, value: str) -> Dict:
         """
-        ✅ FIXED: Create content dictionary with proper image handling
+        [SUCCESS] FIXED: Create content dictionary with proper image handling
         
         Args:
             dicttype: Type of content ('text', 'image_url')
@@ -173,7 +173,7 @@ class Genesis:
     
     def PushImgToUser(self, value: str, fileType: str = None) -> None:
         """
-        ✅ FIXED: Add image to user contents with proper handling
+        [SUCCESS] FIXED: Add image to user contents with proper handling
         
         Args:
             value: Image path, URL, or base64 string
@@ -191,7 +191,7 @@ class Genesis:
         
     def PushFileToUser(self, filename: str) -> bool:
         """
-        ✅ FIXED: Add file content to user contents (was typo UserContents)
+        [SUCCESS] FIXED: Add file content to user contents (was typo UserContents)
         
         Returns:
             True if successful, False otherwise
@@ -216,7 +216,7 @@ class Genesis:
         return False
     
     def ClearAll(self) -> None:
-        """✅ NEW: Clear all contents"""
+        """[SUCCESS] NEW: Clear all contents"""
         self.systemContents.clear()
         self.userContents.clear()
         self.last_response = None
@@ -225,7 +225,7 @@ class Genesis:
     def TXRX(self, LLM: str = "openai/gpt-4o-2024-11-20", provider: List[str] = None, 
              max_tokens: int = None, temperature: float = None) -> Optional[str]:
         """
-        ✅ ENHANCED: Send message to AI with better error handling and options
+        [SUCCESS] ENHANCED: Send message to AI with better error handling and options
         
         Args:
             LLM: Model name
@@ -331,7 +331,7 @@ class Genesis:
     
     # ---String Representation---
     def __str__(self) -> str:
-        """✅ FIXED: String representation of the object"""
+        """[SUCCESS] FIXED: String representation of the object"""
         return f"Genesis(project='{self.projTitle}', system_msgs={len(self.systemContents)}, user_msgs={len(self.userContents)})"
     
     def __repr__(self) -> str:
@@ -353,7 +353,7 @@ class Genesis:
         
     # ---Arithmetic Functions---
     def __add__(self, nextItem):
-        """✅ ENHANCED: Combine two Genesis objects"""
+        """[SUCCESS] ENHANCED: Combine two Genesis objects"""
         if not isinstance(nextItem, Genesis):
             raise TypeError("Can only add Genesis objects together")
             
@@ -363,7 +363,7 @@ class Genesis:
         return sumObj
             
     def __sub__(self, nextItem):
-        """✅ FIXED: Remove duplicate content (more logical than arithmetic subtraction)"""
+        """[SUCCESS] FIXED: Remove duplicate content (more logical than arithmetic subtraction)"""
         if not isinstance(nextItem, Genesis):
             raise TypeError("Can only subtract Genesis objects")
             
@@ -404,14 +404,14 @@ class Genesis:
         return (len(self.systemContents) + len(self.userContents) > 
                 len(nextItem.systemContents) + len(nextItem.userContents))
 
-# ✅ ENHANCED: Better example with environment variable for API key
+# [SUCCESS] ENHANCED: Better example with environment variable for API key
 def main():
     """Example usage with enhanced error handling"""
     
-    # ✅ SECURITY: Use environment variable for API key
+    # [SUCCESS] SECURITY: Use environment variable for API key
     key = os.getenv('OPENROUTER_API_KEY', 'your-api-key-here')
     if key == 'your-api-key-here':
-        print("⚠️  Warning: Using default API key. Set OPENROUTER_API_KEY environment variable.")
+        print("[WARNING] Warning: Using default API key. Set OPENROUTER_API_KEY environment variable.")
     
     httpRef = "https://your-website.com"  # Optional: Your website for rankings
     projectTitle = "Investment Analysis"
@@ -426,7 +426,7 @@ def main():
         # Set user prompt
         AI.PushMsgToUser("text", "As a value investor, what stocks would you recommend for long-term investment in 2024?")
         
-        print("🤖 Sending request to AI...")
+        print("[AI] Sending request to AI...")
         
         # Get response with enhanced parameters
         response = AI.TXRX(
@@ -437,12 +437,12 @@ def main():
         )
         
         if response:
-            print(f"\n🎯 AI Response:\n{response}")
+            print(f"\n[AI] AI Response:\n{response}")
         else:
-            print(f"❌ Failed to get response. Last error: {AI.last_error}")
+            print(f"[ERROR] Failed to get response. Last error: {AI.last_error}")
             
     except Exception as e:
-        print(f"❌ Unexpected error in main: {e}")
+        print(f"[ERROR] Unexpected error in main: {e}")
     
     finally:
         # Clean up
